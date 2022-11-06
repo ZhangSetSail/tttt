@@ -35,43 +35,11 @@ steps:
       from_secret: domestic_namespace
   commands:
   - sleep 10 # give docker enough time to start
-  - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/builder:${BUILDER_VERSION} && \
-  - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/runner:${RUNNER_VERSION} && \
-  - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/kaniko-executor:${KANIKO_VERSION} && \
-  - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/resource-proxy:${RESOURCE_PROXY_VERSION}
+  - ./test.sh
   when:
     event:
       include:
       - custom
-      
-- name: package offline image
-  image: rainbond/docker:dind
-  privileged: true
-  volumes:
-    - name: dockersock
-      path: /var/run
-  environment:
-    BUILDER_VERSION:
-      from_secret: builder_version
-    RUNNER_VERSION:
-      from_secret: runner_version
-    KANIKO_VERSION:
-      from_secret: kaniko_version
-    RESOURCE_PROXY_VERSION:
-      from_secret: resource_proxy_version
-    DOMESTIC_BASE_NAME:
-      from_secret: domestic_base_name
-    DOMESTIC_NAMESPACE:
-      from_secret: domestic_namespace
-    VERSION:
-      from_secret: version
-  commands:
-  - sleep 10 # give docker enough time to start
-  when:
-    event:
-      include:
-      - custom
-  
 - name: Setup aliyun oss
   image: rainbond/docker:dind
   privileged: true
