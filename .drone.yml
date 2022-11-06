@@ -34,11 +34,11 @@ steps:
     DOMESTIC_NAMESPACE:
       from_secret: domestic_namespace
   commands:
-  - sleep 10 # give docker enough time to start
-  - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/builder:${BUILDER_VERSION}
-  - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/runner:${RUNNER_VERSION}
-  - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/kaniko-executor:${KANIKO_VERSION}
-  - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/resource-proxy:${RESOURCE_PROXY_VERSION}
+    - sleep 10 # give docker enough time to start
+    - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/builder:${BUILDER_VERSION}
+    - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/runner:${RUNNER_VERSION}
+    - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/kaniko-executor:${KANIKO_VERSION}
+    - docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/resource-proxy:${RESOURCE_PROXY_VERSION}
 
 - name: package offline image
   image: rainbond/docker:dind
@@ -61,8 +61,9 @@ steps:
       from_secret: domestic_namespace
     VERSION:
       from_secret: version
-  commands:
-  - docker save -o rainbond-offline-"${VERSION}".tar ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/builder:${BUILDER_VERSION} ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/runner:${RUNNER_VERSION} ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/kaniko-executor:${KANIKO_VERSION} ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/resource-proxy:${RESOURCE_PROXY_VERSION}
+  commands: 
+    - sleep 10 
+    - docker save -o rainbond-offline-"${VERSION}".tar ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/builder:${BUILDER_VERSION} ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/runner:${RUNNER_VERSION} ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/kaniko-executor:${KANIKO_VERSION} ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/resource-proxy:${RESOURCE_PROXY_VERSION}
 
 - name: Setup aliyun oss
   image: rainbond/docker:dind
@@ -78,10 +79,10 @@ steps:
     GOOS: linux
     GOARCH: arm64
   commands:
-  - sleep 10
-  - wget https://gosspublic.alicdn.com/ossutil/1.7.11/ossutilarm64 && chmod +x ossutilarm64
-  - ./ossutilarm64 config -e oss-cn-shanghai.aliyuncs.com -i $AKI -k $AKS
-  - ./ossutilarm64 cp -rf rainbond-offline-*.tar oss://rainbond-pkg/offline/5.X/
+    - sleep 10
+    - wget https://gosspublic.alicdn.com/ossutil/1.7.11/ossutilarm64 && chmod +x ossutilarm64
+    - ./ossutilarm64 config -e oss-cn-shanghai.aliyuncs.com -i $AKI -k $AKS
+    - ./ossutilarm64 cp -rf rainbond-offline-*.tar oss://rainbond-pkg/offline/5.X/
   when:
     event:
       include:
