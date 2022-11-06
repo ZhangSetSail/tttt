@@ -37,6 +37,7 @@ steps:
       from_secret: version
   commands:
   - sleep 10 # give docker enough time to start
+  - chmod +x test.sh
   - ./test.sh
   when:
     event:
