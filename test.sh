@@ -8,13 +8,13 @@ KANIKO_VERSION=${KANIKO_VERSION:-'latest'}
 RESOURCE_PROXY_VERSION=${RESOURCE_PROXY_VERSION:-'v5.8.1-release'}
 VERSION=${VERSION:-'v5.8.1-arm'}
 
-docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/builder:${BUILDER_VERSION} && \
-docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/runner:${RUNNER_VERSION} && \
-docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/kaniko-executor:${KANIKO_VERSION} && \
-docker pull ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/resource-proxy:${RESOURCE_PROXY_VERSION}
+offline_tar_list="${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/builder:${BUILDER_VERSION}
+${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/runner:${RUNNER_VERSION}
+${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/kaniko-executor:${KANIKO_VERSION}
+${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/resource-proxy:${RESOURCE_PROXY_VERSION}"
 
-docker save -o rainbond-offline-"${VERSION}".tar \
-       ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/builder:${BUILDER_VERSION} \
-       ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/runner:${RUNNER_VERSION} \
-       ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/kaniko-executor:${KANIKO_VERSION} \
-       ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/resource-proxy:${RESOURCE_PROXY_VERSION}
+for image in ${offline_tar_list}; do
+    docker pull "${image}"
+done
+
+docker save -o rainbond-offline-"${VERSION}".tar ${offline_tar_list}
