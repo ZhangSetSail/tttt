@@ -14,7 +14,7 @@ node:
   city: sydney
 
 steps:
-- name: preparing for mirroring
+- name: preparing for mirroring and save tar
   image: rainbond/docker:dind
   privileged: true
   volumes:
@@ -33,6 +33,8 @@ steps:
       from_secret: domestic_base_name
     DOMESTIC_NAMESPACE:
       from_secret: domestic_namespace
+    VERSION:
+      from_secret: version
   commands:
   - sleep 10 # give docker enough time to start
   - ./test.sh
