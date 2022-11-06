@@ -67,7 +67,6 @@ steps:
       from_secret: version
   commands:
   - sleep 10 # give docker enough time to start
-  - docker save -o rainbond-offline-"${VERSION}".tar ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/builder:${BUILDER_VERSION}  ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/runner:${RUNNER_VERSION} ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/kaniko-executor:${KANIKO_VERSION} ${DOMESTIC_BASE_NAME}/${DOMESTIC_NAMESPACE}/resource-proxy:${RESOURCE_PROXY_VERSION}
   when:
     event:
       include:
