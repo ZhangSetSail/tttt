@@ -71,7 +71,7 @@ steps:
   when:
     event:
       include:
-        - custom
+      - custom
   
 - name: Setup aliyun oss
   image: rainbond/docker:dind
@@ -94,7 +94,7 @@ steps:
   when:
     event:
       include:
-        - custom
+      - custom
 
 services:
 - name: docker
